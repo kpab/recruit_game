@@ -10,7 +10,7 @@ c_rank_list = [0, 1, 2, 3, 4, 5, 6]
 num_students = 200
 num_companies = 7
 c_limit = 30
-day_limit = 400
+day_limit = 200
 
 class App:
     def __init__(self):  # 初期化
@@ -24,8 +24,8 @@ class App:
         self.c_recruiting = list(range(num_companies))  # 募集中会社idリスト
         self.result = {}  # s_id: c_id
 
-        while self.day < day_limit:
-            pyxel.run(self.update, self.draw)  # アプリケーションの実行
+        # while self.day < day_limit:
+        pyxel.run(self.update, self.draw)  # アプリケーションの実行
         # pyxel.quit()
 
 
@@ -60,6 +60,7 @@ class App:
                 if c.id not in self.c_recruiting:  # 締め切った企業の除外
                     continue
                 c.process(s_to_c, resume, naitei_mail, oinori_mail)
+            print(naitei_mail)
 
             # 4. 結果通知
             for s in self.students:
@@ -86,7 +87,7 @@ class App:
         for c in self.companies:
             print(f"-- id: {c.id} --\n{c.naitei_member}")
         
-        pyxel.quit()
+        # pyxel.quit()
 
 
     def draw(self):  # 描画処理
