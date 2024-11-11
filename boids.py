@@ -113,8 +113,8 @@ class Simulation:
 
         def update(frame):
             self.update()
-            scatter.set_offsets(np.array([student.position for student in self.students]))
-            scatter.set_color([student.color for student in self.students])
+            # scatter.set_offsets(np.array([student.position for student in self.students]))
+            # scatter.set_color([student.color for student in self.students])
 
             for i, student in enumerate(self.students):
                 texts[i].set_position((student.position[0], student.position[1]))
@@ -125,10 +125,10 @@ class Simulation:
                 texts2[i].set_text(str(len(c.naitei_member)) + "/" + str(c_limit))
 
 
-            return scatter, *texts, texts2
+            return *texts, *texts2
 
 
-        anim = FuncAnimation(fig, update, frames=day_limit, interval=50, blit=False)
+        anim = FuncAnimation(fig, update, frames=day_limit, interval=100, blit=False)
         plt.show()
     
         
