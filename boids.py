@@ -20,6 +20,9 @@ HITO_SIYA_LEVEL = 16.0 # 👁️
 SEKKATI = 0.2
 YASASISA = 0.1 # 人回避の重み
 
+WIDTH = 500
+HEIGHT = 500
+
 goal_list = [[20, 400], [80, 400], [160, 400], [220, 400], [300, 400], [390, 400], [460, 400]]
 
 colors = mycolor.CrandomList(num_companies)
@@ -34,20 +37,24 @@ class Simulation:
         self.c_recruiting = list(range(num_companies))  # 募集中会社idリスト
         self.result = {}  # s_id: c_id
 
-        self.width = 500
-        self.height = 500
+        self.width = WIDTH
+        self.height = HEIGHT
 
         self.c_adress = {} # 会社所在地
     
-        # pyxel.quit()
-
-
-    def update(self):  # フレームの更新処理
+    def update(self):
+        if self.day > 180 and self.day % 30 != 0:
+            self.updating()
+        self.day += 1
+        print(f"Day: {self.day}")
+    
+    def updating(self):  # フレームの更新処理
         # time.sleep(2.0)
         resume = {}  # 履歴書
         # while self.day < day_limit:
-        print(f"Day: {self.day}")
+        
 
+       
         # 2. 応募
         s_to_c = {}
         
@@ -91,7 +98,7 @@ class Simulation:
                 self.s_doing.remove(s_id)
         for student in self.students:
             student.update(self.students)
-        self.day += 1
+        
 
         # for c in self.companies:
         #     print(f"-- id: {c.id} --\n{c.naitei_member}")
@@ -104,29 +111,28 @@ class Simulation:
 
         for c in self.companies:
             ax.plot(c.position[0], c.position[1], 'b*', markersize=10)
-            ax.text(c.position[0], c.position[1] + 50, f"らんく: {c.rank}", ha='center', color='blue')
+            ax.text(c.position[0], c.position[1] + 80, f"らんく: {c.rank}", ha='center', color='blue')
             
 
         scatter = ax.scatter([], [], c=[])
         texts = [ax.text(student.position[0], student.position[1], str(student.rank), ha='center') for student in self.students]
-        texts2 = [ax.text(c.position[0], c.position[1] + 30, str(len(c.naitei_member)), ha='center') for c in self.companies]
+        texts2 = [ax.text(c.position[0], c.position[1] + 60, str(len(c.naitei_member)), ha='center') for c in self.companies]
+        text3 = ax.text(250, 480, str(self.day), ha='center')
 
         def update(frame):
             self.update()
-            # scatter.set_offsets(np.array([student.position for student in self.students]))
-            # scatter.set_color([student.color for student in self.students])
+            scatter.set_offsets(np.array([student.position for student in self.students]))
+            scatter.set_color([student.color for student in self.students])
 
             for i, student in enumerate(self.students):
                 texts[i].set_position((student.position[0], student.position[1]))
                 texts[i].set_text(str(student.rank))
 
             for i, c in enumerate(self.companies):
-                texts2[i].set_position((c.position[0], c.position[1] + 30))
+                texts2[i].set_position((c.position[0], c.position[1] + 60))
                 texts2[i].set_text(str(len(c.naitei_member)) + "/" + str(c_limit))
-
-
-            return *texts, *texts2
-
+            
+            text3.set_text(str(self.day))
 
         anim = FuncAnimation(fig, update, frames=day_limit, interval=100, blit=False)
         plt.show()
@@ -141,7 +147,7 @@ class Student:
         self.x = self.id
         self.y = self.rank * 20
         self.color = colors[self.rank]
-        self.position = np.array([float(self.id*2), float((7-self.rank)*6)])
+        self.position = np.array([random.uniform(10, WIDTH-10), float((7-self.rank)*6)])
 
         self.goal = np.zeros(2)
         self.max_speed = self.rank * 2
@@ -149,7 +155,6 @@ class Student:
 
         self.hitosiya = HITO_SIYA_LEVEL
 
-        
         if self.type == "normal":
             self.start_day = 180
             self.cycle = 30
@@ -187,7 +192,6 @@ class Student:
 
     def impact_avoid(self, students):
         human_avoid_power = np.zeros(2) # 初期化
-
 
         # -- 他人と回避 --
         for other in students:
