@@ -11,10 +11,10 @@ import japanize_matplotlib
 s_rank_list = [1, 2, 3, 4, 5]
 c_rank_list = [0, 1, 2, 3, 4, 5, 6] 
 
-num_students = 200
+num_students = 600
 num_companies = 7
-c_limit = 30
-day_limit = 400
+c_limit = 150
+day_limit = 400 
 
 HITO_SIYA_LEVEL = 16.0 # 👁️
 SEKKATI = 0.2
@@ -43,7 +43,7 @@ class Simulation:
         self.c_adress = {} # 会社所在地
     
     def update(self):
-        if self.day > 180 and self.day % 30 != 0:
+        if self.day > 180 and self.day % 30 == 0:
             self.updating()
         self.day += 1
         print(f"Day: {self.day}")
@@ -117,7 +117,7 @@ class Simulation:
         scatter = ax.scatter([], [], c=[])
         texts = [ax.text(student.position[0], student.position[1], str(student.rank), ha='center') for student in self.students]
         texts2 = [ax.text(c.position[0], c.position[1] + 60, str(len(c.naitei_member)), ha='center') for c in self.companies]
-        text3 = ax.text(250, 480, str(self.day), ha='center')
+        text3 = ax.text(250, 520, str(self.day), ha='center')
 
         def update(frame):
             self.update()
@@ -129,7 +129,6 @@ class Simulation:
                 texts[i].set_text(str(student.rank))
 
             for i, c in enumerate(self.companies):
-                texts2[i].set_position((c.position[0], c.position[1] + 60))
                 texts2[i].set_text(str(len(c.naitei_member)) + "/" + str(c_limit))
             
             text3.set_text(str(self.day))
