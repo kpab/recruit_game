@@ -11,9 +11,9 @@ import japanize_matplotlib
 s_rank_list = [1, 2, 3, 4, 5]
 c_rank_list = [0, 1, 2, 3, 4, 5, 6] 
 
-num_students = 600
+num_students = 200
 num_companies = 7
-c_limit = 150
+c_limit = 30
 day_limit = 400 
 
 HITO_SIYA_LEVEL = 16.0 # 👁️
@@ -121,8 +121,8 @@ class Simulation:
 
         def update(frame):
             self.update()
-            scatter.set_offsets(np.array([student.position for student in self.students]))
-            scatter.set_color([student.color for student in self.students])
+            # scatter.set_offsets(np.array([student.position for student in self.students]))
+            # scatter.set_color([student.color for student in self.students])
 
             for i, student in enumerate(self.students):
                 texts[i].set_position((student.position[0], student.position[1]))
